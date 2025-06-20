@@ -20,7 +20,7 @@ const Footer = () => {
           <li><Link to="/posts/categories/Database" onClick={handleCategoryClick}>Database</Link></li>
         </ul>
         <div className="footer__copyright">
-          <small>© 2025 CodeCraft Blog - Made with 💚 for developers worldwide</small>
+          <small>Made with 💚 by Matías Priguetti</small>
         </div>
     </footer>
   )
