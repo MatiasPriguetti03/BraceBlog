@@ -4,6 +4,7 @@ const HttpError = require('../models/errorModel');
 const path = require('path');
 const fs = require('fs');
 const {v4: uuid} = require('uuid');
+const cloudinary = require('../config/cloudinary');
 
 
 
@@ -31,32 +32,30 @@ const createPost = async (req, res, next) => {
         if( thumbnail.size > 1024 * 1024 * 2) { // 2MB limit
             return next(new HttpError(422, 'Thumbnail size should be less than 2MB'));
         }
-        let filename = thumbnail.name;
-        let splittedFilename = filename.split('.');
-        let newFilename = splittedFilename[0] + uuid() + '.' + splittedFilename[splittedFilename.length - 1];
 
-        thumbnail.mv(path.join(__dirname, '../uploads', newFilename), async (err) => {
-            if (err) {
-                return next(new HttpError(500, 'Failed to upload thumbnail'));
-            } 
-
-            const newPost = await Post.create({
-                title,
-                description,
-                category,
-                creator,
-                thumbnail: newFilename
-            });
-            if (!newPost) {
-                return next(new HttpError(422, 'Failed to create post'));
-            }
-
-            
-            const userPostCount = user.posts + 1 || 1;
-            await User.findByIdAndUpdate(creator, {posts: userPostCount}, {new: true});
-
-            res.status(201).json({message: 'Post created successfully', post: newPost});
+        // Upload to Cloudinary
+        const uploadResult = await cloudinary.uploader.upload(thumbnail.tempFilePath, {
+            folder: 'braceblog/posts',
+            resource_type: 'auto',
+            public_id: `post_${uuid()}`
         });
+
+        const newPost = await Post.create({
+            title,
+            description,
+            category,
+            creator,
+            thumbnail: uploadResult.secure_url
+        });
+
+        if (!newPost) {
+            return next(new HttpError(422, 'Failed to create post'));
+        }
+
+        const userPostCount = user.posts + 1 || 1;
+        await User.findByIdAndUpdate(creator, {posts: userPostCount}, {new: true});
+
+        res.status(201).json({message: 'Post created successfully', post: newPost});
     } catch (error) {
         return next(new HttpError(error.message || 'Failed to create post', error.status || 500));
     }
@@ -153,22 +152,20 @@ const editPost = async (req, res, next) => {
                 return next(new HttpError(422, 'Thumbnail size should be less than 2MB'));
             }
 
-            // Remove old thumbnail from server
-            const oldThumbnailPath = path.join(__dirname, '../uploads', post.thumbnail);
-            if (fs.existsSync(oldThumbnailPath)) {
-                fs.unlinkSync(oldThumbnailPath);
+            // Extract public_id from current thumbnail URL to delete from Cloudinary
+            if (post.thumbnail && post.thumbnail.includes('cloudinary.com')) {
+                const publicId = post.thumbnail.split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(`braceblog/posts/${publicId}`);
             }
 
-            let fileName = newThumbnail.name;
-            let splittedFilename = fileName.split('.');
-            let newFilename = splittedFilename[0] + uuid() + '.' + splittedFilename[splittedFilename.length - 1];
-
-            newThumbnail.mv(path.join(__dirname, '../uploads', newFilename), async (err) => {
-                if (err) {
-                    return next(new HttpError(500, 'Failed to upload thumbnail'));
-                }
+            // Upload new thumbnail to Cloudinary
+            const uploadResult = await cloudinary.uploader.upload(newThumbnail.tempFilePath, {
+                folder: 'braceblog/posts',
+                resource_type: 'auto',
+                public_id: `post_${uuid()}`
             });
-            thumbnail = newFilename;
+
+            thumbnail = uploadResult.secure_url;
         }
 
         const updatedPost = await Post.findByIdAndUpdate(postId, {title, description, category, thumbnail}, {new: true});
@@ -197,16 +194,12 @@ const deletePost = async (req, res, next) => {
 
         if (post.creator.toString() !== creator) {
             return next(new HttpError(403, 'You are not authorized to delete this post'));
-        }
-
-        // Remove thumbnail from server
-        const thumbnailPath = path.join(__dirname, '../uploads', post.thumbnail);
-        if (fs.existsSync(thumbnailPath)) {
-            fs.unlinkSync(thumbnailPath, (err) => {
-                if (err) {
-                    return next(new HttpError(500, 'Failed to delete thumbnail'));
-                }
-            });
+        }       
+        
+        // Remove thumbnail from Cloudinary
+        if (post.thumbnail && post.thumbnail.includes('cloudinary.com')) {
+            const publicId = post.thumbnail.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`braceblog/posts/${publicId}`);
         }
 
         await Post.findByIdAndDelete(postId);

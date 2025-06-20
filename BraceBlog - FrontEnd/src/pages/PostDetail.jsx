@@ -6,6 +6,7 @@ import { UserContext } from '../context/userContext'
 import Loader from '../components/Loader'
 import DeletePost from './DeletePost'
 import axios from 'axios'
+import { getImageUrl } from '../utils/imageUtils'
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -96,7 +97,7 @@ const PostDetail = () => {
         <h1>{post.title}</h1>
         <div className="post-detail__thumbnail">
           <img
-            src={`${import.meta.env.VITE_ASSETS_URL}/uploads/${post.thumbnail}`}
+            src={getImageUrl(post.thumbnail)}
             alt={post.title}
           />
         </div>

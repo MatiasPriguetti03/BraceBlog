@@ -35,6 +35,8 @@ const CategoryPosts = () => {
 
     if (category) {
       fetchPosts();
+      // Scroll to top when category changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [category]);
   if (isLoading) {

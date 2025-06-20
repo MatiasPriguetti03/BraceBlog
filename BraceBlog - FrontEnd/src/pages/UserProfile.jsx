@@ -5,6 +5,7 @@ import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import axios from 'axios';
+import { getAvatarUrl as getAvatarFromUtils } from '../utils/imageUtils';
 
 import { FaEdit } from 'react-icons/fa';
 import  { FaCheck } from 'react-icons/fa';
@@ -81,7 +82,7 @@ const UserProfile = () => {
   const defaultAvatar =
     "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNlMmU4ZjAiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyMCIgcj0iOCIgZmlsbD0iIzk0YTNiOCIvPgo8cGF0aCBkPSJNMTAgNDBjMC04LjI4NCA2LjcxNi0xNSAxNS0xNXMxNSA2LjcxNiAxNSAxNSIgZmlsbD0iIzk0YTNiOCIvPgo8L3N2Zz4K"; 
 
-    // Función para obtener la URL del avatar
+  // Función para obtener la URL del avatar
     const getAvatarUrl = (avatar) => {
     // Si estamos en modo edición y hay previsualización, mostrarla
     if (isEditingAvatar && previewUrl) {
@@ -103,7 +104,7 @@ const UserProfile = () => {
       return defaultAvatar;
     }
 
-    return `${import.meta.env.VITE_ASSETS_URL}/uploads/${cleanAvatar}`;
+    return getAvatarFromUtils(cleanAvatar);
   };
   
   const confirmAvatarChange = async () => {

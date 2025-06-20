@@ -22,6 +22,7 @@ app.use(express.json({extended: true}));
 app.use(express.urlencoded({extended: true}));
 app.use(cors(corsOptions));
 
+// Mantener compatibilidad con archivos existentes en uploads
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use('/api/users', userRoutes);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Loader from '../components/Loader';
+import { getAvatarUrl as getAvatarFromUtils } from "../utils/imageUtils"; 
 
 const Authors = () => {
   const [authors, setAuthors] = useState([]);
@@ -26,7 +27,7 @@ const Authors = () => {
       return defaultAvatar;
     }
     
-    return `${import.meta.env.VITE_ASSETS_URL}/uploads/${cleanAvatar}`;
+    return getAvatarFromUtils(cleanAvatar);
   };
 
   useEffect(() => {

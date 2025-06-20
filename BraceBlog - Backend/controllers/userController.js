@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
 const {v4: uuid} = require('uuid');
+const cloudinary = require('../config/cloudinary');
 
 // =============================== REGISTER A NEW USER
 // POST : /api/users/register
@@ -134,14 +135,10 @@ const changeAvatar = async (req, res, next) => {
         const user = await User.findById(req.user.userId);
         if (!user) {
             return next(new HttpError(404, "User not found."));
-        }
-        // delete old avatar if exists
-        if (user.avatar) {
-            fs.unlink(path.join(__dirname, '..', 'uploads', user.avatar), (err) => {
-                if (err) {
-                    console.error("Error deleting old avatar:", err);
-                }
-            })
+        }        // delete old avatar if exists
+        if (user.avatar && user.avatar.includes('cloudinary.com')) {
+            const publicId = user.avatar.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`braceblog/avatars/${publicId}`);
         }
 
         // validate avatar file
@@ -150,29 +147,26 @@ const changeAvatar = async (req, res, next) => {
             return next(new HttpError(422, "Avatar file size exceeds 1MB."));
         }
 
+        // Upload avatar to Cloudinary
+        const uploadResult = await cloudinary.uploader.upload(avatar.tempFilePath, {
+            folder: 'braceblog/avatars',
+            resource_type: 'auto',
+            public_id: `avatar_${uuid()}`
+        });
 
-        let avatarName = avatar.name;
-        let splittedName = avatarName.split('.');
-        let newAvatarName = splittedName[0] +  uuid() + '.' + splittedName[splittedName.length - 1];
-        avatar.mv(path.join(__dirname, '..', 'uploads', newAvatarName), async (err) => {
-            if (err) {
-                return next(new HttpError(500, "Failed to upload avatar."));
-            }
+        // update user avatar in database
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.userId,
+            { avatar: uploadResult.secure_url },
+            { new: true }
+        );
+        if (!updatedUser) {
+            return next(new HttpError(404, "User not found."));
+        }
 
-            // update user avatar in database
-            const updatedUser = await User.findByIdAndUpdate(
-                req.user.userId,
-                { avatar: newAvatarName },
-                { new: true }
-            );
-            if (!updatedUser) {
-                return next(new HttpError(404, "User not found."));
-            }
-
-            res.status(200).json({
-                message: "Avatar changed successfully.",
-                avatar: newAvatarName
-            });
+        res.status(200).json({
+            message: "Avatar changed successfully.",
+            avatar: uploadResult.secure_url
         });
     } catch (error) {
         return next(new HttpError(error));

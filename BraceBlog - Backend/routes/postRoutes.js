@@ -10,17 +10,22 @@ const {
   editPost,
   deletePost
 } = require('../controllers/postController');
-const authMiddleware = require('../middleware/authmiddleware');
-
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = Router();
 
-router.post('/', upload(), authMiddleware, createPost);
+// Configuración para express-fileupload (solo para rutas que manejan archivos)
+const uploadConfig = upload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
+});
+
+router.post('/', uploadConfig, authMiddleware, createPost);
 router.get('/', getPosts);
 router.get('/categories/:category', getCatPosts);
 router.get('/users/:id', getUserPosts);
 router.get('/:id', getPost);
-router.patch('/:id', upload(), authMiddleware, editPost);
+router.patch('/:id', uploadConfig, authMiddleware, editPost);
 router.delete('/:id', authMiddleware, deletePost);
 
 

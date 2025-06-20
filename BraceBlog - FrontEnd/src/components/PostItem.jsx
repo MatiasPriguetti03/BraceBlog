@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import PostAuthor from './PostAuthor'
+import { getImageUrl } from '../utils/imageUtils'
 
 const PostItem = ({id, category, title, description, authorID, thumbnail, createdAt}) => {
     // Extract plain text from HTML for preview
@@ -18,7 +19,7 @@ const PostItem = ({id, category, title, description, authorID, thumbnail, create
       <article className="post">
         <Link to={`/posts/${id}`} className="post__link">
           <div className="post__thumbnail">
-            <img src={`${import.meta.env.VITE_ASSETS_URL}/uploads/${thumbnail}`} alt={title} />
+            <img src={getImageUrl(thumbnail)} alt={title} />
           </div>
           <div className="post__content">
             <h3>{postTitle}</h3>

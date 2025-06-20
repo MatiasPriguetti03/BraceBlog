@@ -6,6 +6,7 @@ import { UserContext } from '../context/userContext';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import DeletePost from './DeletePost';
+import { getImageUrl } from '../utils/imageUtils';
 
 
 
@@ -65,7 +66,7 @@ const DashBoard = () => {
               <div className="dashboard__post-info">
                 <div className="dashboard__post-thumbnail">
                   <img
-                    src={`${import.meta.env.VITE_ASSETS_URL}/uploads/${post.thumbnail}`}
+                    src={getImageUrl(post.thumbnail)}
                     alt=""
                   />
                 </div>

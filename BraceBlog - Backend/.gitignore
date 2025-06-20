@@ -11,6 +11,13 @@ yarn-error.log
 .env.test.local
 .env.production.local
 
+# Upload directory (no longer needed with Cloudinary)
+uploads/
+
+# Temporary files
+tmp/
+temp/
+
 # Build directories
 /dist
 /build

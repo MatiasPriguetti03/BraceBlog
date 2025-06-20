@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import ReactTimeAgo from 'react-time-ago';
 import TimeAgo from 'javascript-time-ago';
+import { getAvatarUrl } from '../utils/imageUtils';
 
 // Load the locale for time ago
 import en from 'javascript-time-ago/locale/en.json';
@@ -16,19 +17,14 @@ const PostAuthor = ({authorID, createdAt}) => {
   const [imageError, setImageError] = React.useState(false);
 
   // Avatar por defecto como imagen base64
-  const defaultAvatar = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNlMmU4ZjAiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyMCIgcj0iOCIgZmlsbD0iIzk0YTNiOCIvPgo8cGF0aCBkPSJNMTAgNDBjMC04LjI4NCA2LjcxNi0xNSAxNS0xNXMxNSA2LjcxNiAxNSAxNSIgZmlsbD0iIzk0YTNiOCIvPgo8L3N2Zz4K";
-
+  const defaultAvatar = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNlMmU4ZjAiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyMCIgcj0iOCIgZmlsbD0iIzk0YTNiOCIvPgo8cGF0aCBkPSJNMTAgNDBjMC04LjI4NCA2LjcxNi0xNSAxNS0xNXMxNSA2LjcxNiAxNSAxNSIgZmlsbD0iIzk0YTNiOCIvPgo8L3N2Zz4K";  
   // Función para obtener la URL del avatar
-  const getAvatarUrl = () => {
+  const getAuthorAvatar = () => {
     if (imageError) {
       return defaultAvatar;
     }
     
-    if (author?.avatar && author.avatar !== 'default-avatar.png') {
-      return `${import.meta.env.VITE_ASSETS_URL}/uploads/${author.avatar}`;
-    }
-    
-    return defaultAvatar;
+    return getAvatarUrl(author?.avatar);
   };
 
   const handleImageError = () => {
@@ -62,9 +58,8 @@ const PostAuthor = ({authorID, createdAt}) => {
           borderRadius: '50%',
           overflow: 'hidden',
         }}
-      >
-        <img
-          src={getAvatarUrl()}
+      >        <img
+          src={getAuthorAvatar()}
           alt={author?.name || "Author"}
           onError={handleImageError}
           style={{
