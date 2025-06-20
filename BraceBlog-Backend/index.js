@@ -11,29 +11,7 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:5173', 
-      'http://localhost:5174', 
-      'http://localhost:5175', 
-      'http://localhost:3000',
-      'https://brace-blog-frontend-git-master-matiaspriguetti03s-projects.vercel.app',
-      'https://brace-blog-frontend-hd07m19a8-matiaspriguetti03s-projects.vercel.app'
-    ];
-    
-    // Permitir cualquier subdominio de vercel.app que contenga brace-blog-frontend
-    const isVercelDomain = origin && /^https:\/\/brace-blog-frontend.*\.vercel\.app$/.test(origin);
-    
-    // Permitir requests sin origin (como aplicaciones móviles o Postman)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin) || isVercelDomain) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:3000', 'https://brace-blog-frontend-git-master-matiaspriguetti03s-projects.vercel.app'],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
