@@ -6,17 +6,18 @@ const Home = () => {
     <>
       <section className="hero-section">
         <div className="container">
-          <h1>CodeCraft Blog</h1>
+          <h1>BraceBlog</h1>
           <p>
-            Your ultimate destination for modern programming topics, cutting-edge technologies, 
-            and software development best practices. Stay ahead of the curve with expert insights 
-            and practical tutorials.
+            Your ultimate destination for modern programming topics,
+            cutting-edge technologies, and software development best practices.
+            Stay ahead of the curve with expert insights and practical
+            tutorials.
           </p>
         </div>
       </section>
       <Posts />
     </>
-  )
+  );
 }
 
 export default Home
