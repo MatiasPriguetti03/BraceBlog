@@ -1,10 +1,9 @@
 # BraceBlog
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/4b717924-8949-481c-8480-b65147538910" alt="Description" width="500" height="400">
+  <img src="https://github.com/user-attachments/assets/e418763c-f028-42bb-84ac-8577cd86632e" alt="Description" width="500" height="400">
   <p><em>Your ultimate destination for modern programming topics, cutting-edge technologies, and software development best practices.</em></p>
 </div>
-
 
 ## 🚀 Features
 
