@@ -67,6 +67,7 @@ const EditPost = () => {
     "Security",
     "Database",
     "Low-Level",
+    "Networking-Infrastructure",
   ];
 
   useEffect(() => {

@@ -42,6 +42,7 @@ const modules = {
     'list', 'bullet', 'indent',
     'link', 'image',
   ]
+  
   const POST_CATEGORIES = [
     "Uncategorized",
     "Frontend",
@@ -55,6 +56,7 @@ const modules = {
     "Security",
     "Database",
     "Low-Level",
+    "Networking-Infrastructure",
   ];
 
   const createPost = async (e) => {

@@ -18,6 +18,7 @@ const Footer = () => {
           <li><Link to="/posts/categories/Cloud" onClick={handleCategoryClick}>Cloud</Link></li>
           <li><Link to="/posts/categories/Security" onClick={handleCategoryClick}>Security</Link></li>
           <li><Link to="/posts/categories/Database" onClick={handleCategoryClick}>Database</Link></li>
+          <li><Link to="/posts/categories/Networking-Infrastructure" onClick={handleCategoryClick}>Networking/Infrastructure</Link></li>
         </ul>
         <div className="footer__copyright">
           <small>Made with 💚 by Matías Priguetti</small>
