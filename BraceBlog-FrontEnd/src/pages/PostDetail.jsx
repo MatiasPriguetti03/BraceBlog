@@ -7,6 +7,7 @@ import Loader from '../components/Loader'
 import DeletePost from './DeletePost'
 import axios from 'axios'
 import { getImageUrl } from '../utils/imageUtils'
+import { sanitizeHtml } from '../utils/textUtils'
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -93,7 +94,7 @@ const PostDetail = () => {
               <DeletePost postID={id} />
             </div>
           )}
-        </div>
+        </div> 
         <h1>{post.title}</h1>
         <div className="post-detail__thumbnail">
           <img
@@ -103,7 +104,7 @@ const PostDetail = () => {
         </div>
         <div
           className="post-detail__content"
-          dangerouslySetInnerHTML={{ __html: post.description }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.description) }}
         />
       </div>
     </section>

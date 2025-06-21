@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css' // Import the styles for React Quill
 import { UserContext } from '../context/userContext'
+import { validateDescription } from '../utils/textUtils'
 import axios from 'axios'
 
 const CreatePost = () => {
@@ -58,16 +59,24 @@ const modules = {
 
   const createPost = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.set('title', title);
-    formData.set('category', category);
-    formData.set('description', description);
-    formData.set('thumbnail', thumbnail);    
-
+    
     if (!title || !category || !description || !thumbnail) {
       setError("All fields are required");
       return;
     }
+    
+    // Validación mejorada para la descripción
+    const descriptionValidation = validateDescription(description, 10);
+    if (!descriptionValidation.valid) {
+      setError(descriptionValidation.message);
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.set('title', title);
+    formData.set('category', category);
+    formData.set('description', description);
+    formData.set('thumbnail', thumbnail);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/posts/`,

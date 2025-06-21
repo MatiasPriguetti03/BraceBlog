@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const {v4: uuid} = require('uuid');
 const cloudinary = require('../config/cloudinary');
+const { stripHtml } = require('../middleware/validationMiddleware');
 
 
 
@@ -16,10 +17,16 @@ const cloudinary = require('../config/cloudinary');
 const createPost = async (req, res, next) => {
     try {
         const {title, description, category} = req.body;
-        const creator = req.user.userId;
-
-        if (!title || !description || !category || !req.files.thumbnail) {
-            return next(new HttpError(422, 'All fields are required'));
+        const creator = req.user.userId;        
+        
+        const stripHtml = (html) => {
+            return html.replace(/<[^>]*>/g, '').trim();
+        };
+        
+        const plainTextDescription = stripHtml(description);
+        
+        if (!title || !description || plainTextDescription.length < 10 || !category || !req.files.thumbnail) {
+            return next(new HttpError(422, 'All fields are required. Description must have meaningful content.'));
         }
 
         const user = await User.findById(creator);
@@ -129,11 +136,17 @@ const editPost = async (req, res, next) => {
     try {
         const postId = req.params.id;
         const creator = req.user.userId;
-        const {title, description, category} = req.body;
-
-        // ReactQuill has paragraph opening  and closing tag with a break tag in between so there are 11 characters in there already
-        if (!title || description.length < 12 || !category) {
-            return next(new HttpError(422, 'All fields are required'));
+        const {title, description, category} = req.body;        
+        
+        
+        const stripHtml = (html) => {
+            return html.replace(/<[^>]*>/g, '').trim();
+        };
+        
+        const plainTextDescription = stripHtml(description);
+        
+        if (!title || !description || plainTextDescription.length < 10 || !category) {
+            return next(new HttpError(422, 'All fields are required. Description must have meaningful content.'));
         }
 
         const post = await Post.findById(postId);

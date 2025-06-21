@@ -3,17 +3,11 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import PostAuthor from './PostAuthor'
 import { getImageUrl } from '../utils/imageUtils'
+import { extractPlainText, truncateText } from '../utils/textUtils'
 
 const PostItem = ({id, category, title, description, authorID, thumbnail, createdAt}) => {
-    // Extract plain text from HTML for preview
-    const getPlainText = (html) => {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        return tempDiv.textContent || tempDiv.innerText || '';
-    };
-
-    const plainDescription = getPlainText(description);
-    const shortDescription = plainDescription.length > 145 ? `${plainDescription.substring(0, 145)}...` : plainDescription;
+    const plainDescription = extractPlainText(description);
+    const shortDescription = truncateText(plainDescription, 145);
     const postTitle = title.length > 50 ? `${title.substring(0, 50)}...` : title;
     return (
       <article className="post">

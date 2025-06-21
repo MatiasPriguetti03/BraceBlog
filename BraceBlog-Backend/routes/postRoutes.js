@@ -11,6 +11,7 @@ const {
   deletePost
 } = require('../controllers/postController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { validatePost, checkValidationErrors } = require('../middleware/validationMiddleware');
 
 const router = Router();
 
@@ -20,12 +21,12 @@ const uploadConfig = upload({
   tempFileDir: '/tmp/'
 });
 
-router.post('/', uploadConfig, authMiddleware, createPost);
+router.post('/', uploadConfig, authMiddleware, validatePost, checkValidationErrors, createPost);
 router.get('/', getPosts);
 router.get('/categories/:category', getCatPosts);
 router.get('/users/:id', getUserPosts);
 router.get('/:id', getPost);
-router.patch('/:id', uploadConfig, authMiddleware, editPost);
+router.patch('/:id', uploadConfig, authMiddleware, validatePost, checkValidationErrors, editPost);
 router.delete('/:id', authMiddleware, deletePost);
 
 
