@@ -30,9 +30,8 @@ const validatePost = [
             
             return true;
         }),
-    
-    body('category')
-        .isIn(['Frontend', 'Backend', 'Full-Stack', 'AI', 'Devops', 'Mobile', 'Web3', 'Cloud', 'Security', 'Database', 'Low-Level', 'Uncategorized'])
+      body('category')
+        .isIn(['Frontend', 'Backend', 'Full-Stack', 'AI', 'Devops', 'Mobile', 'Web3', 'Cloud', 'Security', 'Database', 'Low-Level', 'Networking-Infrastructure', 'Uncategorized'])
         .withMessage('Invalid category selected')
 ];
 
