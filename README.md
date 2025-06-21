@@ -1,12 +1,12 @@
 # BraceBlog
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/e418763c-f028-42bb-84ac-8577cd86632e" alt="Description" width="500" height="400">
+  <img src="https://github.com/user-attachments/assets/e418763c-f028-42bb-84ac-8577cd86632e" alt="Description" width="600" height="500">
   <p><em>Your ultimate destination for modern programming topics, cutting-edge technologies, and software development best practices.</em></p>
 </div>
 
 ## 🚀 Features
-
+> **⚠️ Important Note on API Response Times:** This application uses Render's free tier for hosting the backend API. On the free plan, the server automatically goes into sleep mode after periods of inactivity. When you first access the application, you may experience a **delay of up to 30 seconds** while the server "wakes up" from this dormant state. This is normal behavior and not a bug in the application. After the initial request, subsequent interactions will function
 ### 📝 Post Management
 - **Create posts** with rich text editor (ReactQuill)
 - **Edit and delete** your own posts
