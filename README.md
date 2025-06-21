@@ -1,7 +1,7 @@
 # BraceBlog
 
 <div align="center">
-  ![543_1x_shots_so](https://github.com/user-attachments/assets/4b717924-8949-481c-8480-b65147538910)
+  <img src="https://github.com/user-attachments/assets/4b717924-8949-481c-8480-b65147538910" alt="Description" width="500" height="400">
   <p><em>Your ultimate destination for modern programming topics, cutting-edge technologies, and software development best practices.</em></p>
 </div>
 
